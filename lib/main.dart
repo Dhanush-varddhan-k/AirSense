@@ -1,9 +1,23 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:indoor_air_quality_check/pages/dashboard.dart';
 import 'package:indoor_air_quality_check/pages/welcome_screen.dart';
 import 'package:indoor_air_quality_check/theme/theme.dart';
 
-void main() {
-  runApp(const MyApp());
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: FirebaseOptions(
+      apiKey: 'AIzaSyDseoT9VB8XqJieVbhslcgSPgWbnO4dgZY',
+      appId: '1:782286485249:android:2e4f562335b9a548a58d00',
+      messagingSenderId: '782286485249',
+      projectId: 'airsense-cf390',
+      storageBucket: 'airsense-cf390.appspot.com',
+      // Your web Firebase config options
+    ),
+  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -16,6 +30,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: lightMode,
+      routes: {
+        '/home' : (context) => HomeScreen(),
+      },
       home: const WelcomeScreen(),
     );
   }

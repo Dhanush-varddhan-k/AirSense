@@ -39,6 +39,8 @@ dependencies:
   firebase_auth: ^4.17.8
   icons_plus: ^5.0.0
   logo: ^1.2.1
+  cloud_firestore: ^4.15.8
+  fluttertoast: ^8.2.4
 
 dev_dependencies:
   flutter_test:

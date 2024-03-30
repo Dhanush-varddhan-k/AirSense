@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:indoor_air_quality_check/pages/signin.dart';
 import 'package:indoor_air_quality_check/theme/theme.dart';
 import 'package:indoor_air_quality_check/widgets/custom_scaffold.dart';
+import '../services/firebase_auth.dart';
+import '../widgets/toast.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -12,8 +15,22 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final FirebaseAuthService _auth = FirebaseAuthService();
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  bool isSigningUp = false;
   final _formSignupKey = GlobalKey<FormState>();
   bool agreePersonalData = true;
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
@@ -63,8 +80,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           }
                           return null;
                         },
+                        controller: _usernameController,
                         decoration: InputDecoration(
-                          label: const Text('Full Name'),
+                          label: const Text(
+                            'Full Name',
+                          ),
                           hintText: 'Enter Full Name',
                           hintStyle: const TextStyle(
                             color: Colors.black26,
@@ -94,6 +114,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           }
                           return null;
                         },
+                        controller: _emailController,
                         decoration: InputDecoration(
                           label: const Text('Email'),
                           hintText: 'Enter Email',
@@ -127,6 +148,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           }
                           return null;
                         },
+                        controller: _passwordController,
                         decoration: InputDecoration(
                           label: const Text('Password'),
                           hintText: 'Enter Password',
@@ -201,6 +223,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         'Please agree to the processing of personal data')),
                               );
                             }
+                            _signUp();
                           },
                           child: const Text('Sign up'),
                         ),
@@ -296,4 +319,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
     );
   }
+  void _signUp() async {
+
+    setState(() {
+      isSigningUp = true;
+    });
+
+    String username = _usernameController.text;
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    User? user = await _auth.signUpWithEmailAndPassword(email, password);
+
+    setState(() {
+      isSigningUp = false;
+    });
+    if (user != null) {
+      showToast(message: "User is successfully created");
+      Navigator.pushNamed(context, "/home");
+    } else {
+      showToast(message: "Some error happend");
+    }
+  }
 }
+

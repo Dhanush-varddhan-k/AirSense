@@ -32,8 +32,10 @@ class WelcomeScreen extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
+                      SizedBox(height: 15,),
                       Text(
                         "Wellness begins with the Air you breathe.",
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,
