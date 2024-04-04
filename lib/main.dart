@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:indoor_air_quality_check/pages/dashboard.dart';
+import 'package:indoor_air_quality_check/pages/progress.dart';
 import 'package:indoor_air_quality_check/pages/welcome_screen.dart';
 import 'package:indoor_air_quality_check/theme/theme.dart';
 
@@ -32,6 +33,8 @@ class MyApp extends StatelessWidget {
       theme: lightMode,
       routes: {
         '/home' : (context) => HomeScreen(),
+        '/progress_page' : (context) => ProgressPage(),
+        '/rooms_page' : (context) => HomeScreen(),
       },
       home: const WelcomeScreen(),
     );
