@@ -1,100 +1,48 @@
-import 'dart:async';
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:real_time_chart/real_time_chart.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
-import '../charts/line_chart.dart';
 import '../theme/background_clip.dart';
 import '../theme/variables.dart';
-import '../widgets/chart_container.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class Dashboard extends StatefulWidget {
+  const Dashboard({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<Dashboard> createState() => _DashboardState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-
-  // String _timeString = _formatDateTime(DateTime.now());
-  String? _timeString;
-  String? _dateString;
-  @override
-  void initState() {
-    _timeString = _formatDateTime(DateTime.now());
-    _dateString = _formatDate(DateTime.now());
-    print("Time : ${_timeString}");
-    Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
-    super.initState();
-  }
-  void _getTime() {
-    final String formattedDateTime = _formatDateTime(DateTime.now());
-    final String formattedDate = _formatDate(DateTime.now());
-    setState(() {
-      _timeString = formattedDateTime;
-      _dateString = formattedDate;
-    });
-  }
-  String _formatDateTime(DateTime dateTime) {
-    return "${dateTime.hour}:${dateTime.minute}:${dateTime.second}";
-  }
-  String _formatDate(DateTime dateTime) {
-    return "${dateTime.day}/${dateTime.month}/${dateTime.year}";
-  }
-  // final List<ChartData> chartData = [
-  //   ChartData(2010, 35),
-  //   ChartData(2011, 28),
-  //   ChartData(2012, 34),
-  //   ChartData(2013, 32),
-  //   ChartData(2014, 40)
-  // ];
+class _DashboardState extends State<Dashboard> {
+  final stream = positiveDataStream();
   @override
   Widget build(BuildContext context) {
-    final stream = positiveDataStream();
-    return PopScope(
-      canPop: false,
-      child: Scaffold(
-        // appBar: AppBar(
-        //   title: Text(
-        //     'Dashboard',
-        //     style: TextStyle(
-        //       color: Colors.white54,
-        //     ),
-        //   ),
-        //   centerTitle: true,
-        //   backgroundColor: Colors.blueAccent,
-        //   automaticallyImplyLeading: false,
-        // ),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Stack(
+    return SingleChildScrollView(
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
                 children : [
                   ClipPath(
                     clipper: BackgroundWaveClipper(),
                     child:Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 400,
-                      decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [ MidnightBlue , MidnightBlue],
-                          )),
-                      child: Container(
-                        padding: const EdgeInsets.fromLTRB(15,30,0,30),
-                        child: const Text("Dashboard",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w300,
-                            fontSize: 32,
+                        width: MediaQuery.of(context).size.width,
+                        height: 400,
+                        decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [ MidnightBlue , MidnightBlue],
+                            )),
+                        child: Container(
+                          padding: const EdgeInsets.fromLTRB(15,30,0,30),
+                          child: const Text("Dashboard",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w300,
+                              fontSize: 32,
+                            ),
                           ),
-                        ),
-                      )
+                        )
                     ),
                   ),
                   Positioned(
@@ -106,9 +54,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         "Welcome back Aravind!",
                         //_dateString ?? "Loading",
                         style: TextStyle(
-                          fontSize: 13,
-                          fontStyle: FontStyle.italic,
-                          color: Colors.white
+                            fontSize: 13,
+                            fontStyle: FontStyle.italic,
+                            color: Colors.white
                         ),
                       ),
                     ),
@@ -120,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         "Air quality score",
                         style: TextStyle(
-                          color: white
+                            color: white
                         ),
                       ),
                     ),
@@ -168,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         "Generate detailed report",
                         style: TextStyle(
-                          color: MidnightBlue
+                            color: MidnightBlue
                         ),
                       ),
                       style: ButtonStyle(
@@ -180,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   // Center(
                   //   child: Text(_timeString ?? "Loading", style: TextStyle(fontSize: 24)),
                   // ),
-              ]
+                ]
             ),
             SizedBox(
               width: MediaQuery.of(context).size.width,
@@ -192,97 +140,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-
-            ]
-          ),
-        ),
-        bottomNavigationBar: Container(
-          color: MidnightBlue,
-          height: 80,
-          child: GNav(
-              rippleColor: MidnightBlue, // tab button ripple color when pressed
-              hoverColor: BabyBlue, // tab button hover color
-              gap: 8, // the tab button gap between icon and text
-              tabs: [
-                GButton(
-                  icon: LineIcons.home,
-                  text: 'Home',
-                ),
-                GButton(
-                  icon: Icons.card_membership,
-                  text: 'Progress',
-                  onPressed: (){
-                    Navigator.pushNamed(context, '/progress_page');
-                  },
-                ),
-                GButton(
-                  // onPressed: (){
-                  //   Navigator.pushNamed(context,'/profile');
-                  // },
-                  icon: Icons.room_preferences,
-                  text: 'Rooms',
-                ),
-                GButton(
-                  // onPressed: (){
-                  //   Navigator.pushNamed(context,'/profile');
-                  // },
-                  icon: LineIcons.user,
-                  text: 'Profile',
-                ),
-              ]
-          ),
-        ),
-
-          // body: Container(
-          //   color: Color(0xfff0f0f0),
-          //   child: ListView(
-          //     padding: EdgeInsets.fromLTRB(0, 30, 0, 30),
-          //     children: <Widget>[
-          //       ChartContainer(
-          //         title: 'Line Chart',
-          //         color: Color.fromRGBO(45, 108, 223, 1),
-          //         chart: LineChartContent(),
-          //       ),
-          //     ],
-          //   ),
-          // )
-
-
-          // body: Center(
-          //     child: Container(
-          //         child: SfCartesianChart(
-          //           backgroundColor: Colors.redAccent,
-          //           margin: EdgeInsets.fromLTRB(10, 5, 10, 400),
-          //             series: <CartesianSeries>[
-          //               // Renders line chart
-          //               LineSeries<ChartData, int>(
-          //                   dataSource: chartData,
-          //                   xValueMapper: (ChartData data, _) => data.x,
-          //                   yValueMapper: (ChartData data, _) => data.y,
-          //                   markerSettings: MarkerSettings(
-          //                     height: 50,
-          //                     width: 50,
-          //                   ),
-          //               )
-          //             ]
-          //         )
-          //     )
-          // )
-
-
+          ]
       ),
     );
   }
-  Stream<double> positiveDataStream() {
-    return Stream.periodic(const Duration(milliseconds: 500), (_) {
-      return Random().nextInt(300).toDouble();
-    }).asBroadcastStream();
-  }
 }
-// class ChartData {
-//   ChartData(this.x, this.y);
-//   final int x;
-//   final double y;
-// }
-
-// Random().nextInt(300).toDouble();
+Stream<double> positiveDataStream() {
+  return Stream.periodic(const Duration(milliseconds: 500), (_) {
+    return Random().nextInt(300).toDouble();
+  }).asBroadcastStream();
+}
