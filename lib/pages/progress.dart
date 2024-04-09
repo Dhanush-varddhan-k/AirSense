@@ -97,7 +97,7 @@ class _ProgressPageState extends State<ProgressPage> {
                           width: 300,
                           height: 15,
                           child: LinearProgressIndicator(
-                            color: blueShade1,
+                            color: purpleLight,
                             borderRadius: BorderRadius.circular(50),
                             value: 0.5,
                           ),
@@ -134,7 +134,7 @@ class _ProgressPageState extends State<ProgressPage> {
                               text: "250.4 ",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: TiffanyBlue,
+                                color: purpleLight,
                                 fontSize: 15
                               )
                           ),
@@ -179,7 +179,7 @@ class _ProgressPageState extends State<ProgressPage> {
                           'ECO CHAMPION I',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: blueShade1
+                            color: MidnightBlue
                           ),
                       ),
                       subtitle: Text(
@@ -194,7 +194,7 @@ class _ProgressPageState extends State<ProgressPage> {
                       child: Column(
                         children: [
                           LinearProgressIndicator(
-                            color: blueShade1,
+                            color: MidnightBlue,
                             borderRadius: BorderRadius.circular(50),
                             value: 0.5,
                           ),
@@ -237,7 +237,7 @@ class _ProgressPageState extends State<ProgressPage> {
                                 ],
                               ),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: isButtonEnabled ? blueShade1 : TiffanyBlue,
+                                backgroundColor: isButtonEnabled ? blueShade1 : purpleLight,
                                 elevation: 0
                               )
                             ),
@@ -265,7 +265,7 @@ class _ProgressPageState extends State<ProgressPage> {
                         'ECO CHAMPION II',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: blueShade1
+                            color: MidnightBlue
                         ),
                       ),
                       subtitle: Text(
@@ -280,7 +280,7 @@ class _ProgressPageState extends State<ProgressPage> {
                         child: Column(
                           children: [
                             LinearProgressIndicator(
-                              color: blueShade1,
+                              color: MidnightBlue,
                               borderRadius: BorderRadius.circular(50),
                               value: 0.5,
                             ),
@@ -323,7 +323,7 @@ class _ProgressPageState extends State<ProgressPage> {
                                   ],
                                 ),
                                 style: ElevatedButton.styleFrom(
-                                    backgroundColor: isButtonEnabled ? blueShade1 : TiffanyBlue,
+                                    backgroundColor: isButtonEnabled ? blueShade1 : purpleLight,
                                     elevation: 0
                                 )
                             ),
@@ -351,7 +351,7 @@ class _ProgressPageState extends State<ProgressPage> {
                         'ECO CHAMPION III',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: blueShade1
+                            color: MidnightBlue
                         ),
                       ),
                       subtitle: Text(
@@ -366,7 +366,7 @@ class _ProgressPageState extends State<ProgressPage> {
                         child: Column(
                           children: [
                             LinearProgressIndicator(
-                              color: blueShade1,
+                              color: MidnightBlue,
                               borderRadius: BorderRadius.circular(50),
                               value: 0.5,
                             ),
@@ -409,7 +409,7 @@ class _ProgressPageState extends State<ProgressPage> {
                                   ],
                                 ),
                                 style: ElevatedButton.styleFrom(
-                                    backgroundColor: isButtonEnabled ? blueShade1 : TiffanyBlue,
+                                    backgroundColor: isButtonEnabled ? blueShade1 : purpleLight,
                                     elevation: 0
                                 )
                             ),
