@@ -13,6 +13,7 @@ Future main() async {
     options: FirebaseOptions(
       apiKey: 'AIzaSyDseoT9VB8XqJieVbhslcgSPgWbnO4dgZY',
       appId: '1:782286485249:android:2e4f562335b9a548a58d00',
+      databaseURL: "https://airsense-cf390-default-rtdb.asia-southeast1.firebasedatabase.app",
       messagingSenderId: '782286485249',
       projectId: 'airsense-cf390',
       storageBucket: 'airsense-cf390.appspot.com',

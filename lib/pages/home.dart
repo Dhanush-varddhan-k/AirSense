@@ -4,7 +4,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:indoor_air_quality_check/pages/dashboard.dart';
+import 'package:indoor_air_quality_check/pages/profile.dart';
 import 'package:indoor_air_quality_check/pages/progress.dart';
+import 'package:indoor_air_quality_check/pages/rooms.dart';
 import 'package:line_icons/line_icons.dart';
 
 import '../charts/line_chart.dart';
@@ -23,9 +25,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   int _selectedIndex = 0;
-  static const List<Widget> _widgetOptions = <Widget>[
+  static List<Widget> _widgetOptions = <Widget>[
     Dashboard(),
     ProgressPage(),
+    RoomListPage(),
+    Profile(),
   ];
 
   @override
@@ -70,6 +74,11 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
         ),
+        // floatingActionButton: _selectedIndex==3 ? FloatingActionButton(
+        //   onPressed: _addRoom,
+        //   tooltip: 'Add Room',
+        //   child: Icon(Icons.add),
+        // ) : null,
       ),
     );
   }
