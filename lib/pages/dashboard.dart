@@ -88,7 +88,7 @@ class _DashboardState extends State<Dashboard> {
                               height: 400,
                               decoration: const BoxDecoration(
                                   gradient: LinearGradient(
-                                    colors: [ MidnightBlue, MidnightBlue],
+                                    colors: [purple, purple],
                                   )),
                               child: Container(
                                 padding: const EdgeInsets.fromLTRB(15, 30, 0,
@@ -164,11 +164,11 @@ class _DashboardState extends State<Dashboard> {
                           top: MediaQuery
                               .of(context)
                               .padding
-                              .top + 210,
+                              .top + 205,
                           left: MediaQuery
                               .of(context)
                               .padding
-                              .left + 98,
+                              .left + 90,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -400,12 +400,12 @@ class _DashboardState extends State<Dashboard> {
                             child: Text(
                               "Generate detailed report",
                               style: TextStyle(
-                                  color: MidnightBlue
+                                  color: purple
                               ),
                             ),
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
-                                  TiffanyBlue),
+                                  purpleLight),
                               elevation: MaterialStateProperty.all(0),
                             ),
                           ),
