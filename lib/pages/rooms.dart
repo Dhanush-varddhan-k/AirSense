@@ -13,14 +13,10 @@ class Room {
   final String sensorId;
 
   Room(
-      {
-        required this.name,
+      {required this.name,
         required this.aqi,
         required this.alert,
-        required this.sensorId}
-      );
-
-
+        required this.sensorId});
 }
 
 class MyApp extends StatelessWidget {
@@ -51,78 +47,86 @@ class _RoomListPageState extends State<RoomListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-          ListView.builder(
-          itemCount: rooms.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.black87),
-                borderRadius: BorderRadius.circular(8.0),
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: _getGradientColors(rooms[index].aqi),
-                ),
+    return Stack(children: [
+      ListView.builder(
+        itemCount: rooms.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black87),
+              borderRadius: BorderRadius.circular(8.0),
+              gradient: _getGradientColors(rooms[index].aqi),
+            ),
+            margin: EdgeInsets.all(8.0),
+            child: ListTile(
+              title: Text(rooms[index].name),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('AQI: ${rooms[index].aqi}'),
+                  Text('Sensor ID: ${rooms[index].sensorId}'),
+                  Text('Alert Level: ${rooms[index].alert}'),
+                ],
               ),
-              margin: EdgeInsets.all(8.0),
-              child: ListTile(
-                title: Text(rooms[index].name),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('AQI: ${rooms[index].aqi}'),
-                    Text('Sensor ID: ${rooms[index].sensorId}'),
-                    Text('Alert Level: ${rooms[index].alert}'),
-                  ],
-                ),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.edit),
-                      onPressed: () {
-                        _editRoom(index);
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () {
-                        _deleteRoom(index);
-                      },
-                    ),
-                  ],
-                ),
-                onTap: () {
-                  // tile selection
-                },
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.edit),
+                    onPressed: () {
+                      _editRoom(index);
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      _deleteRoom(index);
+                    },
+                  ),
+                ],
               ),
-            );
-          },
-        ),
-        Positioned(
-          left: MediaQuery.of(context).padding.left + 280,
-          top: MediaQuery.of(context).padding.top + 610,
-          child: ElevatedButton(
-              onPressed: _addRoom,
-              child: Icon(Icons.add)
-          ),
-        )
-      ]
-    );
+              onTap: () {
+                // tile selection
+              },
+            ),
+          );
+        },
+      ),
+      Positioned(
+        left: MediaQuery.of(context).padding.left + 280,
+        top: MediaQuery.of(context).padding.top + 610,
+        child: ElevatedButton(onPressed: _addRoom, child: Icon(Icons.add)),
+      )
+    ]);
   }
 
-  List<Color> _getGradientColors(int aqi) {
+  LinearGradient _getGradientColors(int aqi) {
+    final int segmentSize = 10;
+    Color startColor, endColor;
+
     if (aqi <= 50) {
-      return [Colors.lightGreenAccent, Colors.greenAccent];
+      startColor = Colors.lightGreenAccent;
+      endColor = Colors.greenAccent;
     } else if (aqi <= 100) {
-      return [Colors.yellowAccent, Colors.amberAccent];
+      startColor = Colors.greenAccent;
+      endColor = Colors.yellowAccent;
     } else if (aqi <= 150) {
-      return [Colors.orangeAccent, Colors.deepOrangeAccent];
+      startColor = Colors.yellowAccent;
+      endColor = Colors.orangeAccent;
     } else {
-      return [Colors.redAccent, Colors.red];
+      startColor = Colors.orangeAccent;
+      endColor = Colors.red;
     }
+
+    double percentage = (aqi % segmentSize) / segmentSize;
+    return LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [
+        Color.lerp(endColor, startColor, percentage)!,
+        Color.lerp(endColor, startColor, percentage)!,
+      ],
+    );
   }
 
   void _addRoom() {
@@ -148,8 +152,7 @@ class _RoomListPageState extends State<RoomListPage> {
                   },
                 ),
                 TextField(
-                  decoration: InputDecoration(
-                      labelText: 'Sensor ID'),
+                  decoration: InputDecoration(labelText: 'Sensor ID'),
                   onChanged: (value) {
                     sensorDetails = value;
                   },
@@ -195,8 +198,7 @@ class _RoomListPageState extends State<RoomListPage> {
       context: context,
       builder: (BuildContext context) {
         String roomName = rooms[index].name;
-        String sensorDetails =
-            rooms[index].sensorId;
+        String sensorDetails = rooms[index].sensorId;
         int aqiAlertLevel = rooms[index].alert;
         int randomAqi = rooms[index].aqi;
 
@@ -215,8 +217,7 @@ class _RoomListPageState extends State<RoomListPage> {
                 ),
                 TextField(
                   decoration: InputDecoration(labelText: 'Sensor ID'),
-                  controller: TextEditingController(
-                      text: sensorDetails),
+                  controller: TextEditingController(text: sensorDetails),
                   onChanged: (value) {
                     sensorDetails = value;
                   },
