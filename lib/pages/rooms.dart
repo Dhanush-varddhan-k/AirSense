@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import '../theme/variables.dart';
 
 void main() {
   runApp(MyApp());
@@ -48,6 +49,20 @@ class _RoomListPageState extends State<RoomListPage> {
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
+      Container(
+        height: 100,
+        color: purple,
+        child: const Align(
+          alignment: FractionalOffset(0.05, 0.9),
+          child: Padding(
+            padding: EdgeInsets.only(bottom: 4.0),
+            child: Text(
+              "Rooms",
+              style: TextStyle(color: Colors.white, fontSize: 24.0),
+            ),
+          ),
+        ),
+      ),
       ListView.builder(
         itemCount: rooms.length,
         itemBuilder: (BuildContext context, int index) {
@@ -57,7 +72,10 @@ class _RoomListPageState extends State<RoomListPage> {
               borderRadius: BorderRadius.circular(8.0),
               gradient: _getGradientColors(rooms[index].aqi),
             ),
-            margin: EdgeInsets.all(8.0),
+            margin: index == 0
+                ? const EdgeInsets.only(
+                top: 90.0, left: 8.0, right: 8.0, bottom: 8.0)
+                : const EdgeInsets.all(8.0),
             child: ListTile(
               title: Text(rooms[index].name),
               subtitle: Column(
