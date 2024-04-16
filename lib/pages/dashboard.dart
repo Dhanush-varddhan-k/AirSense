@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:real_time_chart/real_time_chart.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../theme/background_clip.dart';
 import '../theme/variables.dart';
@@ -18,29 +19,35 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
 
+  late List<_SensorData> sensorDataList = [];
+  late List<_SensorData> lastDataList = [];
+
   late double ppm = 0.0;
   late double co = 0.0;
   late double methane = 0.0;
   late double ammonia = 0.0;
   late double temp = 0.0;
   late double humid = 0.0;
+  late String PPM = "";
 
-  late final streamData = FirebaseDatabase.instance
-      .ref()
-      .child('UsersData')
-      .child('hpS18ECifIcqyTDPNDw84Cjd5ck2')
-      .child('readings')
-      .child('air').onValue;
+  late final streamData = FirebaseDatabase.instance.ref().child('UsersData').child('hpS18ECifIcqyTDPNDw84Cjd5ck2').child('readings').child('air').onValue;
 
   int selectedIndex = 0;
   late var stream = positiveDataStream(selectedIndex);
 
   List<String> dropdownItems = [
-    'PPM',
+    'CO2',
     'CO',
     'Methane',
     'Ammonia'
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    sensorDataList.add(_SensorData(DateTime.now(), getValue(selectedIndex)));
+    lastDataList.add(_SensorData(DateTime.now(), getValue(selectedIndex)));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +72,13 @@ class _DashboardState extends State<Dashboard> {
           temp = double.parse(data['temp']);
           humid = double.parse(data['humid']);
 
+          sensorDataList.add(_SensorData(DateTime.now(), getValue(selectedIndex)));
+
+          lastDataList.clear();
+          lastDataList.add(_SensorData(DateTime.now(), getValue(selectedIndex)));
+
           stream = positiveDataStream(selectedIndex);
+          PPM = ppm.toStringAsFixed(2);
 
           print("PPM : $ppm\n");
           print("PPM : $co\n");
@@ -133,7 +146,7 @@ class _DashboardState extends State<Dashboard> {
                           left: MediaQuery
                               .of(context)
                               .padding
-                              .left + 140,
+                              .left + 137,
                           child: Container(
                             child: Text(
                               "CO2 PPM Score",
@@ -153,7 +166,7 @@ class _DashboardState extends State<Dashboard> {
                               .padding
                               .left + 120,
                           child: Text(
-                              "$ppm",
+                              "$PPM",
                               style: TextStyle(
                                 color: white,
                                 fontSize: 50,
@@ -179,13 +192,14 @@ class _DashboardState extends State<Dashboard> {
                                   fontSize: 20,
                                 ),
                               ),
-                              Text(
-                                "MODERATE",
-                                style: TextStyle(
-                                  color: Colors.limeAccent,
-                                  fontSize: 20,
-                                ),
-                              ),
+                              qualityStatus(ppm),
+                              // Text(
+                              //   "MODERATE",
+                              //   style: TextStyle(
+                              //     color: Colors.limeAccent,
+                              //     fontSize: 20,
+                              //   ),
+                              // ),
                               IconButton(
                                   onPressed: (){
                                     showModalBottomSheet(
@@ -417,8 +431,8 @@ class _DashboardState extends State<Dashboard> {
                   ),
                   Row(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(15, 10, 10, 10),
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(15, 10, 10, 10),
                         child: Text(
                           "Realtime Graphs",
                           style: TextStyle(
@@ -435,19 +449,19 @@ class _DashboardState extends State<Dashboard> {
                             width: 154,
                             child: DropdownButton(
                               value: selectedIndex == -1 ? null : selectedIndex,
-                              hint: Text('Select an option'),
+                              hint: const Text('Select an option'),
                               items: List.generate(
                                 dropdownItems.length,
-                                    (index) =>
-                                    DropdownMenuItem(
-                                      value: index,
-                                      child: Text(dropdownItems[index]),
-                                    ),
+                                    (index) => DropdownMenuItem(
+                                  value: index,
+                                  child: Text(dropdownItems[index]),
+                                ),
                               ),
                               onChanged: (index) {
                                 setState(() {
                                   selectedIndex = index!;
                                   stream = positiveDataStream(selectedIndex);
+                                  sensorDataList.clear();
                                 });
                               },
                               alignment: Alignment.center,
@@ -457,33 +471,41 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ],
                   ),
-                  StreamBuilder(
-                      stream: stream,
-                      builder: (context, snapshot){
-                        return SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.width*0.7,
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: RealTimeGraph(
-                              stream: stream,
-                              displayMode: ChartDisplay.points,
-                              displayYAxisValues: true,
-                            ),
+                  SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: 270,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: SfCartesianChart(
+                          primaryXAxis: const DateTimeAxis(
+                            isVisible: false,
+                            labelIntersectAction:
+                            AxisLabelIntersectAction.rotate45,
                           ),
-                        );
-                      }
+                          primaryYAxis: const NumericAxis(
+                            minimum: 0,
+                            maximum: 200,
+                            interval: 50,
+                          ),
+                          series: <LineSeries<_SensorData, DateTime>>[
+                          LineSeries<_SensorData, DateTime>(
+                              dataSource: sensorDataList,
+                              xValueMapper: (_SensorData data, _) => data.time,
+                              yValueMapper: (_SensorData data, _) => data.value,
+                              dataLabelSettings: DataLabelSettings(isVisible: false),
+                            ),
+                            LineSeries<_SensorData, DateTime>(
+                              dataSource: lastDataList,
+                              xValueMapper: (_SensorData data, _) => data.time,
+                              yValueMapper: (_SensorData data, _) => data.value,
+                              // Set data label settings only for the current data point
+                              dataLabelSettings:
+                              DataLabelSettings(isVisible: true),
+                            ),
+                          ],
+                        ),
+                      ),
                   )
-                  // SizedBox(
-                  //   width: MediaQuery.of(context).size.width,
-                  //   height: MediaQuery.of(context).size.width * 0.8,
-                  //   child: Padding(
-                  //     padding: const EdgeInsets.all(16.0),
-                  //     child: RealTimeGraph(
-                  //       stream: stream,
-                  //     ),
-                  //   ),
-                  // ),
                 ]
             ),
           );
@@ -496,18 +518,54 @@ class _DashboardState extends State<Dashboard> {
       }
      );
   }
-  // double graph_val(int x){
-  //   print("PPM2 : $ppm\n");
-  //   print("PPM2: $co\n");
-  //   print("PPM2 : $methane\n");
-  //   print("PPM2 : $ammonia\n");
-  //   print("IND : $selectedIndex\n");
-  //
-  //   if(x==0) return ppm;
-  //   else if(x==1) return co;
-  //   else if(x==2) return methane;
-  //   else return ammonia;
-  // }
+
+  Widget qualityStatus(double x){
+    if(x<50) {
+      return Text(
+        "GOOD",
+        style: TextStyle(
+          color: Colors.greenAccent,
+          fontSize: 20,
+        ),
+      );
+    }
+    else if(x>50 && x<100){
+      return Text(
+        "MODERATE",
+        style: TextStyle(
+          color: Colors.limeAccent,
+          fontSize: 20,
+        ),
+      );
+    }
+    else if(x>100 && x<200){
+      return Text(
+        "UNHEALTHY",
+        style: TextStyle(
+          color: Colors.orangeAccent,
+          fontSize: 20,
+        ),
+      );
+    }
+    else if(x>200 && x<250){
+      return Text(
+        "VERY UNHEALTHY",
+        style: TextStyle(
+          color: Colors.deepOrange,
+          fontSize: 20,
+        ),
+      );
+    }
+    else{
+      return Text(
+        "HAZARDOUS",
+        style: TextStyle(
+          color: Colors.red,
+          fontSize: 20,
+        ),
+      );
+    }
+  }
 
   Stream<double> positiveDataStream(int x) {
     if(x==0) {
@@ -534,9 +592,29 @@ class _DashboardState extends State<Dashboard> {
       return 200.0;
     }).asBroadcastStream();
   }
+
+  double getValue(int index) {
+    switch (index) {
+      case 0:
+        return ppm;
+      case 1:
+        return co;
+      case 2:
+        return methane;
+      case 3:
+        return ammonia;
+      default:
+        return 0.0;
+    }
+  }
 }
 
+class _SensorData {
+  final DateTime time;
+  final double value;
 
+  _SensorData(this.time, this.value);
+}
 
 
 
