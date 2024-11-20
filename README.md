@@ -53,5 +53,4 @@ According to the United States EPA, Indoor Air Quality (IAQ) refers to the air q
 - Special thanks to [Pethu Aravind](https://github.com/Aravind011464) & [Vignesvern](https://github.com/Vignesvern) for their contributions and support.
 - This project was inspired by the need for real-time monitoring and improvement of indoor air quality for healthier living environments.
 
-## Contact
-For any inquiries or support, please contact [rsathishkumar1963@gmail.com](rsathishkumar1963@gmail.com).
+
